@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:simplefinance/widgets/new_transactions.dart';
 import 'package:simplefinance/widgets/transaction_list.dart';
 import './models/transaction.dart';
+import './widgets/chart.dart';
 
 void main() {
   runApp(MyApp());
@@ -46,6 +47,14 @@ class _MyHomePageState extends State<MyHomePage> {
     //       id: 't1', title: 'New Shoe', amount: 69.99, date: DateTime.now()),
     //   Transaction(id: 't2', title: 'Grocery', amount: 16.66, date: DateTime.now())
   ];
+
+  List<Transaction> get _recentTransactions {
+    return _userTransactions.where((tx) {
+      return tx.date.isAfter(DateTime.now().subtract(
+        Duration(days: 7),
+      ));
+    }).toList();
+  }
 
   void _addNewTransaction(String titletx, double amounttx) {
     final newTx = Transaction(
@@ -97,14 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              width: double.infinity,
-              child: Card(
-                color: Colors.blue,
-                child: Text('Chart'),
-                elevation: 5,
-              ),
-            ),
+            Chart(_recentTransactions),
             TransactionList(_userTransactions)
           ],
         ),
